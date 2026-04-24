@@ -1,0 +1,72 @@
+name: Build GradeAstra APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Generate Demo Keystore
+        run: |
+          keytool -genkey -v \
+            -keystore android/upload-keystore.jks \
+            -alias gradeastra \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass GradeAstra@2024 \
+            -keypass GradeAstra@2024 \
+            -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
+
+      - name: Create key.properties
+        run: |
+          echo "storePassword=GradeAstra@2024" > android/key.properties
+          echo "keyPassword=GradeAstra@2024" >> android/key.properties
+          echo "keyAlias=gradeastra" >> android/key.properties
+          echo "storeFile=upload-keystore.jks" >> android/key.properties
+
+      - name: Run Flutter Tests
+        run: flutter test
+        continue-on-error: true
+
+      - name: Build Release APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GradeAstra-Release-APKs
+          path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 30
+
+      - name: Upload Universal APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GradeAstra-Universal-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
