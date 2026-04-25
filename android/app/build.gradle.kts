@@ -22,12 +22,21 @@ android {
         jvmTarget = "1.8"
     }
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { localProperties.load(it) }
+    }
+
+    val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInt() ?: 1
+    val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
+
     defaultConfig {
         applicationId = "com.dhanuk.gradeastra"
         minSdk = flutter.minSdkVersion
         targetSdk = 35
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = flutterVersionCode
+        versionName = flutterVersionName
         multiDexEnabled = true
     }
 
