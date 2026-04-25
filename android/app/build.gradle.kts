@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dhanuk.gradeastra"
-        minSdk = 21
+        minSdk = flutter.minSdkVersion
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -41,7 +41,7 @@ android {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String? ?: "gradeastra"
             keyPassword = keystoreProperties["keyPassword"] as String? ?: "GradeAstra@2024"
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storeFile = keystoreProperties["storeFile"]?.let { rootProject.file(it) } ?: rootProject.file("upload-keystore.jks")
             storePassword = keystoreProperties["storePassword"] as String? ?: "GradeAstra@2024"
         }
     }
@@ -51,6 +51,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
+            // proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")

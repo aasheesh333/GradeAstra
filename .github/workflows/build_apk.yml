@@ -54,14 +54,17 @@ jobs:
         run: flutter test
         continue-on-error: true
 
-      - name: Build Release APK
+      - name: Build Split Release APKs
         run: flutter build apk --release --split-per-abi
+
+      - name: Build Universal Release APK
+        run: flutter build apk --release
 
       - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: GradeAstra-Release-APKs
-          path: build/app/outputs/flutter-apk/*.apk
+          path: build/app/outputs/flutter-apk/*-release.apk
           retention-days: 30
 
       - name: Upload Universal APK
