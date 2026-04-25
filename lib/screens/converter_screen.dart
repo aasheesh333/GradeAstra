@@ -31,8 +31,9 @@ class _ConverterScreenState extends State<ConverterScreen> {
       return;
     }
 
-    if (cgpaInput > u.gradingScale || cgpaInput < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('CGPA must be between 0 and ${u.gradingScale}')));
+    double maxScale = u.id == 'mumbai_uni' ? 10.0 : u.gradingScale.toDouble();
+    if (cgpaInput > maxScale || cgpaInput < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('CGPA must be between 0 and ${maxScale.toInt()}')));
       return;
     }
 
@@ -111,7 +112,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
                   decoration: InputDecoration(
                     hintText: 'e.g. 8.5',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                    suffixText: '/ ${provider.selectedUniversity.gradingScale}',
+                    suffixText: '/ ${provider.selectedUniversity.id == 'mumbai_uni' ? 10 : provider.selectedUniversity.gradingScale}',
                   ),
                   style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
