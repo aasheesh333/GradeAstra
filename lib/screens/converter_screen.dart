@@ -156,7 +156,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
-              child: Text(u.formulaDescription, style: GoogleFonts.monospace()),
+              child: Text(u.formulaDescription, style: const TextStyle(fontFamily: 'monospace')),
             ),
             const SizedBox(height: 24),
             SizedBox(
