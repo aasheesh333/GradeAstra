@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/package_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../utils/constants.dart';
 
 class AdBannerWidget extends StatefulWidget {
