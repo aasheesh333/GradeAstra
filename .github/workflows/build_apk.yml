@@ -34,6 +34,7 @@ jobs:
       - name: Create Keystore from Secrets
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'mykey' }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
@@ -41,7 +42,7 @@ jobs:
             echo "No KEYSTORE_BASE64 found, creating a demo keystore"
             keytool -genkey -v \
               -keystore android/app/upload-keystore.jks \
-              -alias gradeastra \
+              -alias "$KEY_ALIAS" \
               -keyalg RSA \
               -keysize 2048 \
               -validity 10000 \
@@ -54,7 +55,7 @@ jobs:
         env:
           STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEY_ALIAS: "gradeastra"
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'mykey' }}
         run: |
           if [ -n "$STORE_PASSWORD" ]; then
             echo "storePassword=$STORE_PASSWORD" > android/key.properties
@@ -64,7 +65,7 @@ jobs:
           else
             echo "storePassword=GradeAstra@2024" > android/key.properties
             echo "keyPassword=GradeAstra@2024" >> android/key.properties
-            echo "keyAlias=gradeastra" >> android/key.properties
+            echo "keyAlias=$KEY_ALIAS" >> android/key.properties
             echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
           fi
 

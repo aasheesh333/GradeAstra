@@ -53,7 +53,7 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String? ?: "gradeastra"
+            keyAlias = keystoreProperties["keyAlias"] as String? ?: "mykey"
             keyPassword = keystoreProperties["keyPassword"] as String? ?: "GradeAstra@2024"
             storeFile = keystoreProperties["storeFile"]?.let { file(it) } ?: file("upload-keystore.jks")
             storePassword = keystoreProperties["storePassword"] as String? ?: "GradeAstra@2024"
