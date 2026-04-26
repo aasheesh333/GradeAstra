@@ -22,13 +22,22 @@ android {
         jvmTarget = "1.8"
     }
 
+    // Load properties from dart-defines to access secrets passed at build time
+    val dartEnvironmentVariables = project.property("dart-defines") as? String ?: ""
+    val dartDefines = dartEnvironmentVariables.split(",").associate {
+        val parts = String(java.util.Base64.getDecoder().decode(it)).split("=")
+        parts[0] to (parts.getOrNull(1) ?: "")
+    }
+
     defaultConfig {
-        applicationId = "com.dhanuk.gradeastra"
+        applicationId = dartDefines["PACKAGE_NAME"].takeIf { !it.isNullOrEmpty() } ?: "com.dhanuk.gradeastra"
         minSdk = flutter.minSdkVersion
         targetSdk = 34
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutter.versionCode
+        versionName = dartDefines["VERSION_NAME"].takeIf { !it.isNullOrEmpty() } ?: flutter.versionName
         multiDexEnabled = true
+
+        manifestPlaceholders["admob_app_id"] = dartDefines["ADMOB_APP_ID"].takeIf { !it.isNullOrEmpty() } ?: "ca-app-pub-3940256099942544~3347511713"
     }
 
     val keystorePropertiesFile = rootProject.file("key.properties")

@@ -31,34 +31,88 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Generate Demo Keystore
+      - name: Create Keystore from Secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          keytool -genkey -v \
-            -keystore android/app/upload-keystore.jks \
-            -alias gradeastra \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass GradeAstra@2024 \
-            -keypass GradeAstra@2024 \
-            -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          else
+            echo "No KEYSTORE_BASE64 found, creating a demo keystore"
+            keytool -genkey -v \
+              -keystore android/app/upload-keystore.jks \
+              -alias gradeastra \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass GradeAstra@2024 \
+              -keypass GradeAstra@2024 \
+              -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
+          fi
 
       - name: Create key.properties
+        env:
+          STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: "gradeastra"
         run: |
-          echo "storePassword=GradeAstra@2024" > android/key.properties
-          echo "keyPassword=GradeAstra@2024" >> android/key.properties
-          echo "keyAlias=gradeastra" >> android/key.properties
-          echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
+          if [ -n "$STORE_PASSWORD" ]; then
+            echo "storePassword=$STORE_PASSWORD" > android/key.properties
+            echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+            echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+            echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
+          else
+            echo "storePassword=GradeAstra@2024" > android/key.properties
+            echo "keyPassword=GradeAstra@2024" >> android/key.properties
+            echo "keyAlias=gradeastra" >> android/key.properties
+            echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
+          fi
 
       - name: Run Flutter Tests
         run: flutter test
         continue-on-error: true
 
       - name: Build Split Release APKs
-        run: flutter build apk --release --split-per-abi
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
+          ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
+          ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          VERSION_CODE: ${{ secrets.VERSION_CODE }}
+          VERSION_NAME: ${{ secrets.VERSION_NAME }}
+        run: |
+          flutter build apk --release --split-per-abi \
+            --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
+            --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
+            --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
+            --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
+            --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
+            --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
+            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
+            --build-name="${VERSION_NAME:-1.0.0}" \
+            --build-number="${VERSION_CODE:-1}"
 
       - name: Build Universal Release APK
-        run: flutter build apk --release
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
+          ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
+          ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          VERSION_CODE: ${{ secrets.VERSION_CODE }}
+          VERSION_NAME: ${{ secrets.VERSION_NAME }}
+        run: |
+          flutter build apk --release \
+            --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
+            --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
+            --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
+            --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
+            --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
+            --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
+            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
+            --build-name="${VERSION_NAME:-1.0.0}" \
+            --build-number="${VERSION_CODE:-1}"
 
       - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4

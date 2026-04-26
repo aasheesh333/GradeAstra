@@ -1,17 +1,19 @@
 class AdConstants {
-  static const bool kIsProductionAds = false;
+  static const bool kIsProductionAds = true; // Use dart environment variables
 
   static String get bannerAdUnitId {
-    if (kIsProductionAds) {
-      return 'YOUR_REAL_BANNER_ID';
+    const String envId = String.fromEnvironment('ADMOB_BANNER_ID', defaultValue: '');
+    if (kIsProductionAds && envId.isNotEmpty) {
+      return envId;
     } else {
       return 'ca-app-pub-3940256099942544/6300978111';
     }
   }
 
   static String get interstitialAdUnitId {
-    if (kIsProductionAds) {
-      return 'YOUR_REAL_INTERSTITIAL_ID';
+    const String envId = String.fromEnvironment('ADMOB_INTERSTITIAL_ID', defaultValue: '');
+    if (kIsProductionAds && envId.isNotEmpty) {
+      return envId;
     } else {
       return 'ca-app-pub-3940256099942544/1033173712';
     }
