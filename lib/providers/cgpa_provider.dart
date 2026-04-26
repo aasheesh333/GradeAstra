@@ -7,7 +7,7 @@ import '../models/semester_model.dart';
 import '../data/universities.dart';
 
 class CgpaProvider with ChangeNotifier {
-  UniversityModel _selectedUniversity = universitiesData.first;
+  UniversityModel _selectedUniversity = universitiesData.firstWhere((u) => u.id == 'generic', orElse: () => universitiesData.last);
   double _currentCgpa = 0.0;
   double _currentPercentage = 0.0;
 
@@ -36,8 +36,7 @@ class CgpaProvider with ChangeNotifier {
         _selectedUniversity = universitiesData.firstWhere((u) => u.id == defaultUniId);
       } catch (_) {}
     }
-
-    await loadHistory();
+    // Note: loadHistory is explicitly called from HomeScreen's initState
   }
 
   void selectUniversity(UniversityModel u) async {
@@ -124,9 +123,15 @@ class CgpaProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     String? historyStr = prefs.getString('calculation_history');
     if (historyStr != null) {
-      List<dynamic> decoded = json.decode(historyStr);
-      _calculationHistory = decoded.map((e) => Map<String, dynamic>.from(e)).toList();
-      notifyListeners();
+      try {
+        List<dynamic> decoded = json.decode(historyStr);
+        _calculationHistory = decoded.map((e) => Map<String, dynamic>.from(e)).toList();
+        notifyListeners();
+      } catch (e) {
+        await prefs.remove('calculation_history');
+        _calculationHistory = [];
+        notifyListeners();
+      }
     }
   }
 

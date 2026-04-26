@@ -8,6 +8,7 @@ import '../models/subject_model.dart';
 import '../models/semester_model.dart';
 import '../widgets/subject_tile.dart';
 import '../utils/cgpa_calculator.dart';
+import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class SemesterScreen extends StatefulWidget {
@@ -103,33 +104,40 @@ class _SemesterScreenState extends State<SemesterScreen> {
     );
   }
 
-  void _saveSemester() {
+  void _saveSemester() async {
     final provider = context.read<CgpaProvider>();
-    if (provider.subjectsList.isEmpty) return;
+    if (provider.subjectsList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add at least one subject')));
+      return;
+    }
 
     double sgpa = provider.calculateSGPA();
     int totalCredits = provider.subjectsList.fold(0, (sum, s) => sum + s.credits);
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Semester Result'),
-        content: Text('Your SGPA is ${sgpa.toStringAsFixed(2)}\nTotal Credits: $totalCredits'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _processSemesterResult(sgpa, totalCredits);
-            },
-            child: const Text('Save & View'),
-          ),
-        ],
-      ),
-    );
+    await AdService().showInterstitialIfReady();
+
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Semester Result'),
+          content: Text('Your SGPA is ${sgpa.toStringAsFixed(2)}\nTotal Credits: $totalCredits'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _processSemesterResult(sgpa, totalCredits);
+              },
+              child: const Text('Save & View'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _processSemesterResult(double sgpa, int totalCredits) {
@@ -231,7 +239,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: provider.subjectsList.isNotEmpty ? _saveSemester : null,
+                    onPressed: _saveSemester,
                     style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6F00)),
                     child: const Text('Save Result', style: TextStyle(color: Colors.white)),
                   ),

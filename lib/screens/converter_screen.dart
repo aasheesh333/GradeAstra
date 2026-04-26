@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import '../data/universities.dart';
 import '../models/university_model.dart';
 import '../widgets/university_selector.dart';
 import '../utils/cgpa_calculator.dart';
+import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class ConverterScreen extends StatefulWidget {
@@ -20,20 +22,20 @@ class ConverterScreen extends StatefulWidget {
 class _ConverterScreenState extends State<ConverterScreen> {
   final TextEditingController _cgpaController = TextEditingController();
 
-  void _calculate() {
+  void _calculate() async {
     FocusScope.of(context).unfocus();
     final provider = context.read<CgpaProvider>();
     final u = provider.selectedUniversity;
 
     double? cgpaInput = double.tryParse(_cgpaController.text);
     if (cgpaInput == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid CGPA')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid numeric CGPA')));
       return;
     }
 
     double maxScale = u.id == 'mumbai_uni' ? 10.0 : u.gradingScale.toDouble();
     if (cgpaInput > maxScale || cgpaInput < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('CGPA must be between 0 and ${maxScale.toInt()}')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter a valid CGPA between 0 and ${maxScale.toInt()}')));
       return;
     }
 
@@ -55,19 +57,23 @@ class _ConverterScreenState extends State<ConverterScreen> {
     };
     provider.saveToHistory(historyEntry);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ResultScreen(
-          title: 'Conversion Result',
-          cgpa: cgpaInput,
-          percentage: percentage,
-          classification: classification,
-          letterGrade: letterGrade,
-          formulaUsed: u.formulaDescription,
+    await AdService().showInterstitialIfReady();
+
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            title: 'Conversion Result',
+            cgpa: cgpaInput,
+            percentage: percentage,
+            classification: classification,
+            letterGrade: letterGrade,
+            formulaUsed: u.formulaDescription,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override
@@ -109,6 +115,10 @@ class _ConverterScreenState extends State<ConverterScreen> {
                 child: TextField(
                   controller: _cgpaController,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                    LengthLimitingTextInputFormatter(5),
+                  ],
                   decoration: InputDecoration(
                     hintText: 'e.g. 8.5',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -156,7 +166,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
-              child: Text(u.formulaDescription, style: GoogleFonts.monospace()),
+              child: Text(u.formulaDescription, style: GoogleFonts.ibmPlexMono()),
             ),
             const SizedBox(height: 24),
             SizedBox(

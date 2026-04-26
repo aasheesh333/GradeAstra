@@ -11,25 +11,39 @@ import 'overall_screen.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+      context.read<CgpaProvider>().loadHistory()
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final history = context.watch<CgpaProvider>().calculationHistory;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'GradeAstra',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.black87),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: isDark ? Colors.white : Colors.black87),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF1E1E2E) : Colors.white,
         elevation: 0,
         leading: const Icon(Icons.school, color: Color(0xFF1565C0)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black54),
+            icon: Icon(Icons.settings, color: isDark ? Colors.white70 : Colors.black54),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
@@ -44,12 +58,19 @@ class HomeScreen extends StatelessWidget {
             children: [
               Text(
                 'Hello, Student! 👋',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 'What do you want to calculate today?',
-                style: GoogleFonts.inter(fontSize: 13, color: Colors.grey),
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: isDark ? Colors.white : Colors.grey,
+                ),
               ),
               const SizedBox(height: 24),
               _buildFeatureGrid(context),
@@ -101,33 +122,35 @@ class HomeScreen extends StatelessWidget {
       },
     ];
 
-    return AnimationLimiter(
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.0,
-        children: List.generate(features.length, (index) {
-          final item = features[index];
-          return AnimationConfiguration.staggeredGrid(
-            position: index,
-            duration: const Duration(milliseconds: 375),
-            columnCount: 2,
-            child: ScaleAnimation(
-              child: FadeInAnimation(
-                child: _buildFeatureCard(
-                  title: item['title'] as String,
-                  subtitle: item['subtitle'] as String,
-                  icon: item['icon'] as IconData,
-                  color: item['color'] as Color,
-                  onTap: item['onTap'] as VoidCallback,
+    return RepaintBoundary(
+      child: AnimationLimiter(
+        child: GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.0,
+          children: List.generate(features.length, (index) {
+            final item = features[index];
+            return AnimationConfiguration.staggeredGrid(
+              position: index,
+              duration: const Duration(milliseconds: 375),
+              columnCount: 2,
+              child: ScaleAnimation(
+                child: FadeInAnimation(
+                  child: _buildFeatureCard(
+                    title: item['title'] as String,
+                    subtitle: item['subtitle'] as String,
+                    icon: item['icon'] as IconData,
+                    color: item['color'] as Color,
+                    onTap: item['onTap'] as VoidCallback,
+                  ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -170,12 +193,19 @@ class HomeScreen extends StatelessWidget {
             const Spacer(),
             Text(
               title,
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1A1A2E), // always dark
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: GoogleFonts.inter(fontSize: 11, color: Colors.black54),
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                color: const Color(0xFF6B7280), // always medium gray
+              ),
             ),
           ],
         ),

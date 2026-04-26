@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../providers/cgpa_provider.dart';
 import '../models/semester_model.dart';
 import '../utils/cgpa_calculator.dart';
+import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class OverallScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class _OverallScreenState extends State<OverallScreen> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               double? sgpa = double.tryParse(sgpaController.text);
               int? credits = int.tryParse(creditsController.text);
               if (sgpa != null && credits != null) {
@@ -58,6 +59,7 @@ class _OverallScreenState extends State<OverallScreen> {
                   savedAt: DateTime.now(),
                 ));
                 Navigator.pop(context);
+                await AdService().showInterstitialIfReady();
               }
             },
             child: const Text('Add'),
@@ -171,7 +173,10 @@ class _OverallScreenState extends State<OverallScreen> {
                             Text(sem.sgpa.toStringAsFixed(2), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => provider.removeSemester(sem.id),
+                              onPressed: () async {
+                                provider.removeSemester(sem.id);
+                                await AdService().showInterstitialIfReady();
+                              },
                             )
                           ],
                         ),

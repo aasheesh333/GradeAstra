@@ -1,9 +1,8 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart';
+import '../utils/ad_constants.dart';
 
 class AdService {
-  static const String _calcCountKey = 'calculation_count';
   InterstitialAd? _interstitialAd;
   bool _isInterstitialAdReady = false;
 
@@ -13,7 +12,7 @@ class AdService {
 
   void loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: AppConstants.interstitialAdUnitId,
+      adUnitId: AdConstants.interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -41,17 +40,13 @@ class AdService {
   }
 
   Future<void> showInterstitialIfReady() async {
-    final prefs = await SharedPreferences.getInstance();
-    int calcCount = (prefs.getInt(_calcCountKey) ?? 0) + 1;
-    await prefs.setInt(_calcCountKey, calcCount);
-
-    if (calcCount % 3 == 0) {
-      if (_isInterstitialAdReady && _interstitialAd != null) {
-        _interstitialAd?.show();
-        _isInterstitialAdReady = false;
-        _interstitialAd = null;
-        loadInterstitialAd();
-      }
+    if (_isInterstitialAdReady && _interstitialAd != null) {
+      _interstitialAd?.show();
+      _isInterstitialAdReady = false;
+      _interstitialAd = null;
+      loadInterstitialAd();
+    } else {
+      loadInterstitialAd();
     }
   }
 

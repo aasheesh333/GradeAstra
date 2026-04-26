@@ -35,6 +35,8 @@ class GradeAstraApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0), brightness: Brightness.dark),
         fontFamily: GoogleFonts.poppins().fontFamily,
         brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        cardColor: const Color(0xFF1E1E2E), // dark theme card color, we ensured hardcoded text color in HomeScreen
         appBarTheme: const AppBarTheme(
           centerTitle: true,
         ),

@@ -1,23 +1,32 @@
 # GradeAstra — Smart CGPA Calculator
 
-![Build Status](https://github.com/YOUR_USERNAME/gradeastra/actions/workflows/build_apk.yml/badge.svg)
+![Build](https://github.com/YOUR_USERNAME/gradeastra/actions/workflows/build_apk.yml/badge.svg)
 
-## Features
-- CGPA to Percentage conversion for 12 Indian universities
-- Semester-wise SGPA calculator with subject management
-- Overall CGPA tracker across all 8 semesters
-- CGPA progression chart
-- Calculation history with PDF export
-- Share results as image
-- AdMob monetized (banner + interstitial)
-- Offline — works without internet
+Smart CGPA to Percentage calculator for 12+ Indian universities. Built with Flutter.
 
 ## Supported Universities
-AKTU, VTU, Mumbai University, Anna University, RGPV, GTU, SPPU, JNTU, KTU, PTU, Delhi University, Generic
 
-## Build
-Run locally: `flutter build apk --release`
-CI/CD: GitHub Actions auto-builds APK on every push to main
+AKTU · VTU · Mumbai · Anna · RGPV · GTU · SPPU · JNTU · KTU · PTU · Delhi · Generic
 
-## Download APK
-Go to Actions tab → latest workflow run → Artifacts section → download GradeAstra-Release-APKs
+## Features
+
+- CGPA → Percentage (university-specific formulas)
+- Semester SGPA calculator
+- Overall CGPA tracker with chart
+- Calculation history + PDF export
+- AdMob monetized
+- Offline — no internet required
+- Dark mode support
+
+## Build APK
+
+`flutter build apk --release --split-per-abi`
+
+Download from Actions → Artifacts tab.
+
+## Go Live Checklist
+
+- Replace `kIsProductionAds = true` in `lib/utils/ad_constants.dart`
+- Add real AdMob IDs
+- Add real signing keystore
+- Update Play Store listing
