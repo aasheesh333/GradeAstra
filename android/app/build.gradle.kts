@@ -25,7 +25,12 @@ android {
     // Load properties from dart-defines to access secrets passed at build time
     val dartEnvironmentVariables = project.property("dart-defines") as? String ?: ""
     val dartDefines = dartEnvironmentVariables.split(",").associate {
-        val parts = String(java.util.Base64.getDecoder().decode(it)).split("=")
+        val decoded = try {
+             String(java.util.Base64.getDecoder().decode(it))
+        } catch (e: Exception) {
+             ""
+        }
+        val parts = decoded.split("=")
         parts[0] to (parts.getOrNull(1) ?: "")
     }
 
