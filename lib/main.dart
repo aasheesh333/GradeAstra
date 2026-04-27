@@ -6,13 +6,14 @@ import 'app.dart';
 import 'providers/cgpa_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/ad_service.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize AdMob
-  final AdService adService = AdService();
-  await adService.initialize();
+  await MobileAds.instance.initialize();
+  AdService().initialize();
 
   runApp(
     MultiProvider(

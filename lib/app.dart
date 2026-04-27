@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'providers/theme_provider.dart';
 import 'screens/splash_screen.dart';
+import 'widgets/persistent_banner_ad.dart';
 
 class GradeAstraApp extends StatelessWidget {
   const GradeAstraApp({Key? key}) : super(key: key);
@@ -41,6 +42,12 @@ class GradeAstraApp extends StatelessWidget {
           centerTitle: true,
         ),
       ),
+      builder: (context, child) {
+        return Scaffold(
+          body: child ?? const SizedBox.shrink(),
+          bottomNavigationBar: const PersistentBannerAd(),
+        );
+      },
       home: const SplashScreen(),
     );
   }

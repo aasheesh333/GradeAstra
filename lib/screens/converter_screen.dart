@@ -57,7 +57,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
     };
     provider.saveToHistory(historyEntry);
 
-    await AdService().showInterstitialIfReady();
+    AdService().onCalculationDone(context);
 
     if (context.mounted) {
       Navigator.push(

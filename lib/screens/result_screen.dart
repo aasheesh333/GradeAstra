@@ -5,7 +5,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../services/ad_service.dart';
+
 
 class ResultScreen extends StatefulWidget {
   final String title;
@@ -31,25 +31,6 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
-  final AdService _adService = AdService();
-
-  @override
-  void initState() {
-    super.initState();
-    _adService.initialize().then((_) {
-      _adService.loadInterstitialAd();
-      // Wait a bit to ensure ad is loaded before attempting to show
-      Future.delayed(const Duration(seconds: 1), () {
-        _adService.showInterstitialIfReady();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _adService.dispose();
-    super.dispose();
-  }
 
   Future<void> _shareResult() async {
     final image = await _screenshotController.capture();

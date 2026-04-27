@@ -114,8 +114,6 @@ class _SemesterScreenState extends State<SemesterScreen> {
     double sgpa = provider.calculateSGPA();
     int totalCredits = provider.subjectsList.fold(0, (sum, s) => sum + s.credits);
 
-    await AdService().showInterstitialIfReady();
-
     if (context.mounted) {
       showDialog(
         context: context,
@@ -168,6 +166,8 @@ class _SemesterScreenState extends State<SemesterScreen> {
       'date': DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
     };
     provider.saveToHistory(historyEntry);
+
+    AdService().onCalculationDone(context);
 
     Navigator.pushReplacement(
       context,

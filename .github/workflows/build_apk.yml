@@ -50,6 +50,7 @@ jobs:
               -keypass GradeAstra@2024 \
               -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
           fi
+          sed -i "s|ca-app-pub-PLACEHOLDER|${{ secrets.ADMOB_APP_ID }}|g" android/app/src/main/AndroidManifest.xml
 
       - name: Create key.properties
         env:
@@ -75,10 +76,10 @@ jobs:
 
       - name: Build Split Release APKs
         env:
-          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
           ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
           ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
           ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
           PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
           VERSION_CODE: ${{ secrets.VERSION_CODE }}
           VERSION_NAME: ${{ secrets.VERSION_NAME }}
@@ -90,16 +91,15 @@ jobs:
             --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
             --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
             --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
-            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
             --build-name="${VERSION_NAME:-1.0.0}" \
             --build-number="${VERSION_CODE:-1}"
 
       - name: Build Universal Release APK
         env:
-          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
           ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
           ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
           ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
           PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
           VERSION_CODE: ${{ secrets.VERSION_CODE }}
           VERSION_NAME: ${{ secrets.VERSION_NAME }}
@@ -111,7 +111,6 @@ jobs:
             --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
             --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
             --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
-            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
             --build-name="${VERSION_NAME:-1.0.0}" \
             --build-number="${VERSION_CODE:-1}"
 

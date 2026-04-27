@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../providers/cgpa_provider.dart';
-import '../widgets/ad_banner_widget.dart';
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -147,7 +147,6 @@ class HistoryScreen extends StatelessWidget {
                     },
                   ),
           ),
-          const AdBannerWidget(),
         ],
       ),
     );

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../providers/cgpa_provider.dart';
-import '../widgets/ad_banner_widget.dart';
 import 'converter_screen.dart';
 import 'semester_screen.dart';
 import 'overall_screen.dart';
@@ -82,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 12),
               _buildRecentCalculations(history),
               const SizedBox(height: 24),
-              const AdBannerWidget(),
             ],
           ),
         ),

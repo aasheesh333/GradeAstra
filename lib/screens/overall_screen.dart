@@ -59,7 +59,7 @@ class _OverallScreenState extends State<OverallScreen> {
                   savedAt: DateTime.now(),
                 ));
                 Navigator.pop(context);
-                await AdService().showInterstitialIfReady();
+                AdService().onCalculationDone(context);
               }
             },
             child: const Text('Add'),
@@ -173,9 +173,9 @@ class _OverallScreenState extends State<OverallScreen> {
                             Text(sem.sgpa.toStringAsFixed(2), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
+                              onPressed: () {
                                 provider.removeSemester(sem.id);
-                                await AdService().showInterstitialIfReady();
+                                AdService().onCalculationDone(context);
                               },
                             )
                           ],
