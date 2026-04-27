@@ -8,7 +8,7 @@ import '../providers/cgpa_provider.dart';
 import '../data/universities.dart';
 import '../models/university_model.dart';
 import '../widgets/university_selector.dart';
-import '../utils/cgpa_calculator.dart';
+
 import '../services/ad_service.dart';
 import 'result_screen.dart';
 

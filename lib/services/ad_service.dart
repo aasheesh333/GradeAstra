@@ -1,5 +1,5 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import '../utils/constants.dart';
+
 import '../utils/ad_constants.dart';
 
 class AdService {
