@@ -1,5 +1,6 @@
 import java.util.Properties
 import java.io.FileInputStream
+import java.util.Base64
 
 plugins {
     id("com.android.application")
@@ -10,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.dhanuk.gradeastra"
-    compileSdk = 34
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -26,7 +27,7 @@ android {
     val dartEnvironmentVariables = project.property("dart-defines") as? String ?: ""
     val dartDefines = dartEnvironmentVariables.split(",").associate {
         val decoded = try {
-             String(java.util.Base64.getDecoder().decode(it))
+             String(Base64.getDecoder().decode(it))
         } catch (e: Exception) {
              ""
         }
