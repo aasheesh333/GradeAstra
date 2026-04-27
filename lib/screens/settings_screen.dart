@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/cgpa_provider.dart';
 import '../providers/theme_provider.dart';
@@ -114,6 +115,48 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
               );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.privacy_tip),
+            title: const Text('Privacy Policy'),
+            onTap: () async {
+              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Privacy-Policy.html');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Privacy Policy')));
+                }
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.description),
+            title: const Text('Terms of Use'),
+            onTap: () async {
+              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Terms-of-use.html');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Terms of Use')));
+                }
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.contact_mail),
+            title: const Text('Contact us'),
+            onTap: () async {
+              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Contact-us.html');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url);
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Contact us')));
+                }
+              }
             },
           ),
           ListTile(
