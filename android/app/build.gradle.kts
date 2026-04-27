@@ -9,6 +9,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+
+val flutterVersionCodeStr = localProperties.getProperty("flutter.versionCode") ?: "1"
+val flutterVersionNameStr = localProperties.getProperty("flutter.versionName") ?: "1.0.0"
+
 android {
     namespace = "com.dhanuk.gradeastra"
     compileSdk = 36
@@ -40,12 +49,8 @@ android {
         minSdk = flutter.minSdkVersion
         targetSdk = 34
 
-        // Ensure flutter.versionCode and flutter.versionName are accessible safely in KTS
-        val flutterVersionCode = flutter.versionCode ?: 1
-        val flutterVersionName = flutter.versionName ?: "1.0.0"
-
-        versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutterVersionCode
-        versionName = dartDefines["VERSION_NAME"].takeIf { !it.isNullOrEmpty() } ?: flutterVersionName
+        versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutterVersionCodeStr.toInt()
+        versionName = dartDefines["VERSION_NAME"].takeIf { !it.isNullOrEmpty() } ?: flutterVersionNameStr
         multiDexEnabled = true
 
         manifestPlaceholders["admob_app_id"] = dartDefines["ADMOB_APP_ID"].takeIf { !it.isNullOrEmpty() } ?: "ca-app-pub-3940256099942544~3347511713"
