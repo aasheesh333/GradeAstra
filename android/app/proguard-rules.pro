@@ -15,3 +15,4 @@
 -keepattributes *Annotation*
 -dontwarn kotlin.**
 -dontwarn javax.**
+-dontwarn com.google.android.play.core.**
