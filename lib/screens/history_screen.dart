@@ -161,7 +161,7 @@ class HistoryScreen extends StatelessWidget {
                                 Text('${item['cgpa']} CGPA', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                                  decoration: BoxDecoration(color: Colors.green.withOpacity( 0.1), borderRadius: BorderRadius.circular(4)),
                                   child: Text('${item['percentage']}%', style: GoogleFonts.inter(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold)),
                                 )
                               ],
