@@ -8,12 +8,12 @@ class SubjectTile extends StatelessWidget {
   final VoidCallback onDelete;
 
   const SubjectTile({
-    Key? key,
+    super.key,
     required this.subjectName,
     required this.credits,
     required this.grade,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class SubjectTile extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -63,7 +63,7 @@ class SubjectTile extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
+                  color: Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -78,6 +78,7 @@ class SubjectTile extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.delete_outline, color: Colors.red),
+              tooltip: 'Delete Subject',
               onPressed: onDelete,
             ),
           ],

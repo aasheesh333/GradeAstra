@@ -6,12 +6,14 @@ import 'package:intl/intl.dart';
 
 import '../providers/cgpa_provider.dart';
 import '../models/semester_model.dart';
+import 'package:flutter/services.dart';
+import '../utils/constants.dart';
 import '../utils/cgpa_calculator.dart';
 import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class OverallScreen extends StatefulWidget {
-  const OverallScreen({Key? key}) : super(key: key);
+  const OverallScreen({super.key});
 
   @override
   State<OverallScreen> createState() => _OverallScreenState();
@@ -22,6 +24,8 @@ class _OverallScreenState extends State<OverallScreen> {
   void _showAddSemesterDialog() {
     final sgpaController = TextEditingController();
     final creditsController = TextEditingController();
+    final provider = context.read<CgpaProvider>();
+    final maxScale = provider.selectedUniversity.gradingScale;
 
     showDialog(
       context: context,
@@ -32,35 +36,67 @@ class _OverallScreenState extends State<OverallScreen> {
           children: [
             TextField(
               controller: sgpaController,
+              autofocus: true,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'SGPA', border: OutlineInputBorder()),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                LengthLimitingTextInputFormatter(5),
+              ],
+              decoration: InputDecoration(
+                labelText: 'SGPA (0-$maxScale)',
+                border: const OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: creditsController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Total Credits', border: OutlineInputBorder()),
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(3),
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Total Credits',
+                border: OutlineInputBorder(),
+              ),
             ),
           ],
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () {
               double? sgpa = double.tryParse(sgpaController.text);
               int? credits = int.tryParse(creditsController.text);
-              if (sgpa != null && credits != null) {
-                final provider = context.read<CgpaProvider>();
-                provider.addSemester(SemesterModel(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  label: 'Semester ${provider.semestersList.length + 1}',
-                  sgpa: sgpa,
-                  totalCredits: credits,
-                  savedAt: DateTime.now(),
-                ));
-                Navigator.pop(context);
-                AdService().onCalculationDone(context);
+
+              if (sgpa == null || credits == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter valid SGPA and credits')),
+                );
+                return;
               }
+              if (sgpa < 0 || sgpa > maxScale) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('SGPA must be between 0 and $maxScale')),
+                );
+                return;
+              }
+              if (credits <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Credits must be greater than 0')),
+                );
+                return;
+              }
+
+              provider.addSemester(SemesterModel(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                label: 'Semester ${provider.semestersList.length + 1}',
+                sgpa: sgpa,
+                totalCredits: credits,
+                savedAt: DateTime.now(),
+              ));
+              Navigator.pop(context);
+              AdService().onCalculationDone(context);
             },
             child: const Text('Add'),
           ),

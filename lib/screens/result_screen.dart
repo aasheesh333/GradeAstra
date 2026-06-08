@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import '../utils/constants.dart';
 
 
 
@@ -16,14 +17,14 @@ class ResultScreen extends StatefulWidget {
   final String formulaUsed;
 
   const ResultScreen({
-    Key? key,
+    super.key,
     required this.title,
     required this.cgpa,
     required this.percentage,
     required this.classification,
     required this.letterGrade,
     required this.formulaUsed,
-  }) : super(key: key);
+  });
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
@@ -32,15 +33,29 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
 
+  bool _isSharing = false;
+
   Future<void> _shareResult() async {
-    final image = await _screenshotController.capture();
-    if (image == null) return;
+    if (_isSharing) return;
+    setState(() => _isSharing = true);
+    try {
+      final image = await _screenshotController.capture();
+      if (image == null) return;
 
-    final directory = await getApplicationDocumentsDirectory();
-    final imagePath = await File('${directory.path}/result.png').create();
-    await imagePath.writeAsBytes(image);
+      final directory = await getApplicationDocumentsDirectory();
+      final imagePath = await File('${directory.path}/result.png').create();
+      await imagePath.writeAsBytes(image);
 
-    await Share.shareXFiles([XFile(imagePath.path)], text: 'Check out my ${widget.title} from GradeAstra!');
+      await Share.shareXFiles([XFile(imagePath.path)], text: 'Check out my ${widget.title} from GradeAstra!');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share result. Please try again.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSharing = false);
+    }
   }
 
   @override
@@ -53,7 +68,7 @@ class _ResultScreenState extends State<ResultScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(icon: const Icon(Icons.share), onPressed: _shareResult)
+          IconButton(icon: const Icon(Icons.share), tooltip: 'Share Result', onPressed: _isSharing ? null : _shareResult)
         ],
       ),
       body: SingleChildScrollView(
@@ -68,17 +83,17 @@ class _ResultScreenState extends State<ResultScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
                 ),
                 child: Column(
                   children: [
                     Text('CGPA', style: GoogleFonts.inter(fontSize: 16, color: Colors.grey)),
-                    Text(widget.cgpa.toStringAsFixed(2), style: GoogleFonts.poppins(fontSize: 48, fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
+                    Text(widget.cgpa.toStringAsFixed(2), style: GoogleFonts.poppins(fontSize: 48, fontWeight: FontWeight.bold, color: AppConstants.primaryColor)),
                     const SizedBox(height: 16),
                     const Divider(),
                     const SizedBox(height: 16),
                     Text('Equivalent Percentage', style: GoogleFonts.inter(fontSize: 16, color: Colors.grey)),
-                    Text('${widget.percentage.toStringAsFixed(2)}%', style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: const Color(0xFFFF6F00))),
+                    Text('${widget.percentage.toStringAsFixed(2)}%', style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: AppConstants.accentColor)),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +105,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         const SizedBox(width: 8),
                         Chip(
                           label: Text('Grade: ${widget.letterGrade}', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600)),
-                          backgroundColor: const Color(0xFF1565C0),
+                          backgroundColor: AppConstants.primaryColor,
                         ),
                       ],
                     ),
@@ -112,7 +127,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 label: const Text('Back to Home'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: const Color(0xFF1565C0),
+                  backgroundColor: AppConstants.primaryColor,
                   foregroundColor: Colors.white,
                 ),
               ),

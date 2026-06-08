@@ -9,11 +9,12 @@ import '../data/universities.dart';
 import '../models/university_model.dart';
 import '../widgets/university_selector.dart';
 
+import '../utils/constants.dart';
 import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class ConverterScreen extends StatefulWidget {
-  const ConverterScreen({Key? key}) : super(key: key);
+  const ConverterScreen({super.key});
 
   @override
   State<ConverterScreen> createState() => _ConverterScreenState();
@@ -21,6 +22,12 @@ class ConverterScreen extends StatefulWidget {
 
 class _ConverterScreenState extends State<ConverterScreen> {
   final TextEditingController _cgpaController = TextEditingController();
+
+  @override
+  void dispose() {
+    _cgpaController.dispose();
+    super.dispose();
+  }
 
   void _calculate() async {
     FocusScope.of(context).unfocus();
@@ -55,7 +62,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
       'classification': classification,
       'date': DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
     };
-    provider.saveToHistory(historyEntry);
+    await provider.saveToHistory(historyEntry);
 
     AdService().onCalculationDone(context);
 
@@ -86,6 +93,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
+            tooltip: 'Formula Info',
             onPressed: () {
               _showFormulaInfo(context, provider.selectedUniversity);
             },
@@ -132,7 +140,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
             ElevatedButton(
               onPressed: _calculate,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF6F00),
+                backgroundColor: AppConstants.accentColor,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -165,7 +173,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
             Text('Formula Used:', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(8)),
               child: Text(u.formulaDescription, style: GoogleFonts.ibmPlexMono()),
             ),
             const SizedBox(height: 24),

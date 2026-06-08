@@ -11,12 +11,13 @@ import '../providers/cgpa_provider.dart';
 
 
 class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   Future<void> _exportPdf(BuildContext context, List<Map<String, dynamic>> history) async {
     if (history.isEmpty) return;
 
-    final pdf = pw.Document();
+    try {
+      final pdf = pw.Document();
 
     pdf.addPage(
       pw.Page(
@@ -53,6 +54,13 @@ class HistoryScreen extends StatelessWidget {
     await file.writeAsBytes(await pdf.save());
 
     await Share.shareXFiles([XFile(file.path)], text: 'My GradeAstra Calculation History');
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to export PDF. Please try again.')),
+        );
+      }
+    }
   }
 
   @override
@@ -71,6 +79,7 @@ class HistoryScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_sweep),
+            tooltip: 'Clear All History',
             onPressed: () {
               if (history.isEmpty) return;
               showDialog(
@@ -113,7 +122,7 @@ class HistoryScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final item = history[index];
                       return Dismissible(
-                        key: Key(item['date'] + index.toString()),
+                        key: Key('${item['date'] ?? ''}$index'),
                         direction: DismissDirection.endToStart,
                         background: Container(
                           color: Colors.red,
@@ -121,6 +130,22 @@ class HistoryScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 20),
                           child: const Icon(Icons.delete, color: Colors.white),
                         ),
+                        confirmDismiss: (direction) async {
+                          return await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Delete Entry'),
+                              content: const Text('Remove this calculation from history?'),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            ),
+                          ) ?? false;
+                        },
                         onDismissed: (direction) {
                           provider.removeHistoryEntry(index);
                         },
@@ -136,7 +161,7 @@ class HistoryScreen extends StatelessWidget {
                                 Text('${item['cgpa']} CGPA', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
+                                  decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
                                   child: Text('${item['percentage']}%', style: GoogleFonts.inter(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold)),
                                 )
                               ],

@@ -8,11 +8,12 @@ import '../models/subject_model.dart';
 import '../models/semester_model.dart';
 import '../widgets/subject_tile.dart';
 import '../utils/cgpa_calculator.dart';
+import '../utils/constants.dart';
 import '../services/ad_service.dart';
 import 'result_screen.dart';
 
 class SemesterScreen extends StatefulWidget {
-  const SemesterScreen({Key? key}) : super(key: key);
+  const SemesterScreen({super.key});
 
   @override
   State<SemesterScreen> createState() => _SemesterScreenState();
@@ -53,6 +54,8 @@ class _SemesterScreenState extends State<SemesterScreen> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: nameController,
+                    autofocus: true,
+                    maxLength: 50,
                     decoration: const InputDecoration(labelText: 'Subject Name', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 16),
@@ -80,11 +83,16 @@ class _SemesterScreenState extends State<SemesterScreen> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      if (nameController.text.isEmpty) return;
+                      if (nameController.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please enter a subject name')),
+                        );
+                        return;
+                      }
                       final provider = context.read<CgpaProvider>();
                       provider.addSubject(SubjectModel(
                         id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        name: nameController.text,
+                        name: nameController.text.trim(),
                         credits: credits,
                         grade: grade,
                         gradePoint: SubjectModel.gradeToPoint(grade),
@@ -138,7 +146,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
     }
   }
 
-  void _processSemesterResult(double sgpa, int totalCredits) {
+  Future<void> _processSemesterResult(double sgpa, int totalCredits) async {
     final provider = context.read<CgpaProvider>();
     final u = provider.selectedUniversity;
 
@@ -165,7 +173,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
       'classification': classification,
       'date': DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
     };
-    provider.saveToHistory(historyEntry);
+    await provider.saveToHistory(historyEntry);
 
     AdService().onCalculationDone(context);
 
@@ -198,7 +206,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
                     child: Text(
                       'No subjects added yet.\nTap + to add a subject.',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(color: Colors.grey),
+                      style: GoogleFonts.inter(color: Theme.of(context).textTheme.bodySmall?.color),
                     ),
                   )
                 : ListView.builder(
@@ -217,8 +225,8 @@ class _SemesterScreenState extends State<SemesterScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+              color: Theme.of(context).cardColor,
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -5))],
             ),
             child: SafeArea(
               child: Row(
@@ -230,17 +238,17 @@ class _SemesterScreenState extends State<SemesterScreen> {
                     children: [
                       Text(
                         'Live SGPA: ${provider.calculateSGPA().toStringAsFixed(2)}',
-                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: const Color(0xFF1565C0)),
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: AppConstants.primaryColor),
                       ),
                       Text(
                         'Total Credits: ${provider.subjectsList.fold(0, (sum, s) => sum + s.credits)}',
-                        style: GoogleFonts.inter(fontSize: 12, color: Colors.grey),
+                        style: GoogleFonts.inter(fontSize: 12, color: Theme.of(context).textTheme.bodySmall?.color),
                       ),
                     ],
                   ),
                   ElevatedButton(
                     onPressed: _saveSemester,
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6F00)),
+                    style: ElevatedButton.styleFrom(backgroundColor: AppConstants.accentColor),
                     child: const Text('Save Result', style: TextStyle(color: Colors.white)),
                   ),
                 ],
@@ -253,7 +261,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
         padding: const EdgeInsets.only(bottom: 80.0),
         child: FloatingActionButton(
           onPressed: _showAddSubjectSheet,
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: AppConstants.primaryColor,
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),

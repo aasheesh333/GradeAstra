@@ -14,4 +14,12 @@ class AppConstants {
   static const Color successColor = Color(0xFF22C55E);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
+
+  // URLs
+  static const String privacyPolicyUrl = 'https://dhanuk.page.gd/GradeAstra/Privacy-Policy.html';
+  static const String termsOfUseUrl = 'https://dhanuk.page.gd/GradeAstra/Terms-of-use.html';
+  static const String contactUsUrl = 'https://dhanuk.page.gd/GradeAstra/Contact-us.html';
+
+  // Play Store (update with actual package name when published)
+  static const String playStoreUrl = 'https://play.google.com/store/apps/details?id=com.dhanuk.gradeastra';
 }

@@ -11,9 +11,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize AdMob
-  await MobileAds.instance.initialize();
-  AdService().initialize();
+  // Initialize AdMob with error handling
+  try {
+    await MobileAds.instance.initialize();
+    AdService().initialize();
+  } catch (e) {
+    debugPrint('AdMob initialization failed: $e');
+  }
 
   runApp(
     MultiProvider(

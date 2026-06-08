@@ -44,7 +44,7 @@ class AdService {
 
   void loadRewardedAd() {
     if (_rewardedLoading || _rewardedAd != null) return;
-    _rewardedLoading = false;
+    _rewardedLoading = true;
 
     RewardedAd.load(
       adUnitId: AdConstants.kRewardedAdUnitId,
@@ -102,7 +102,6 @@ class AdService {
 
     _interstitialAd!.show();
     _lastInterstitialShown = DateTime.now();
-    _interstitialAd = null;
   }
 
   void _showRewardedAd(BuildContext context) {
@@ -125,7 +124,6 @@ class AdService {
     );
 
     _rewardedAd!.show(onUserEarnedReward: (ad, reward) {});
-    _rewardedAd = null;
   }
 
   void dispose() {

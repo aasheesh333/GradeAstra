@@ -1,4 +1,4 @@
-name: Build GradeAstra APK
+name: Build GradeAstra
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
       - name: Create Keystore from Secrets
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'mykey' }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
@@ -42,31 +42,30 @@ jobs:
             echo "No KEYSTORE_BASE64 found, creating a demo keystore"
             keytool -genkey -v \
               -keystore android/app/upload-keystore.jks \
-              -alias "$KEY_ALIAS" \
+              -alias "${KEY_ALIAS:-mykey}" \
               -keyalg RSA \
               -keysize 2048 \
               -validity 10000 \
-              -storepass GradeAstra@2024 \
-              -keypass GradeAstra@2024 \
+              -storepass changeit \
+              -keypass changeit \
               -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
           fi
-          sed -i "s|ca-app-pub-PLACEHOLDER|${{ secrets.ADMOB_APP_ID }}|g" android/app/src/main/AndroidManifest.xml
 
       - name: Create key.properties
         env:
           STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'mykey' }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           if [ -n "$STORE_PASSWORD" ]; then
             echo "storePassword=$STORE_PASSWORD" > android/key.properties
             echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
-            echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+            echo "keyAlias=${KEY_ALIAS:-mykey}" >> android/key.properties
             echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
           else
-            echo "storePassword=GradeAstra@2024" > android/key.properties
-            echo "keyPassword=GradeAstra@2024" >> android/key.properties
-            echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+            echo "storePassword=changeit" > android/key.properties
+            echo "keyPassword=changeit" >> android/key.properties
+            echo "keyAlias=${KEY_ALIAS:-mykey}" >> android/key.properties
             echo "storeFile=../app/upload-keystore.jks" >> android/key.properties
           fi
 
@@ -88,6 +87,7 @@ jobs:
             --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
             --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
             --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
+            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
             --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
             --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
             --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
@@ -108,6 +108,28 @@ jobs:
             --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
             --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
             --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
+            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
+            --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
+            --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
+            --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
+            --build-name="${VERSION_NAME:-1.0.0}" \
+            --build-number="${VERSION_CODE:-1}"
+
+      - name: Build Release AAB (Play Store)
+        env:
+          ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
+          ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
+          ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
+          VERSION_CODE: ${{ secrets.VERSION_CODE }}
+          VERSION_NAME: ${{ secrets.VERSION_NAME }}
+        run: |
+          flutter build appbundle --release \
+            --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
+            --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
+            --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
+            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
             --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
             --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
             --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
@@ -126,4 +148,11 @@ jobs:
         with:
           name: GradeAstra-Universal-APK
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB (Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: GradeAstra-Release-AAB
+          path: build/app/outputs/bundle/release/app-release.aab
           retention-days: 30

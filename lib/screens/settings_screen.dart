@@ -6,9 +6,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/cgpa_provider.dart';
 import '../providers/theme_provider.dart';
 import '../data/universities.dart';
+import '../utils/constants.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   void _showDefaultUniversityDialog(BuildContext context) {
     final provider = context.read<CgpaProvider>();
@@ -96,7 +97,7 @@ class SettingsScreen extends StatelessWidget {
                 builder: (context) => AlertDialog(
                   title: Row(
                     children: [
-                      const Icon(Icons.school, color: Color(0xFF1565C0)),
+                      const Icon(Icons.school, color: AppConstants.primaryColor),
                       const SizedBox(width: 8),
                       Text('GradeAstra', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                     ],
@@ -105,7 +106,7 @@ class SettingsScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Version 1.0.0+1', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+                      Text('Version 1.0.0', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 8),
                       Text('Smart CGPA Calculator for Indian University Students.', style: GoogleFonts.inter()),
                     ],
@@ -121,7 +122,7 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.privacy_tip),
             title: const Text('Privacy Policy'),
             onTap: () async {
-              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Privacy-Policy.html');
+              final Uri url = Uri.parse(AppConstants.privacyPolicyUrl);
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               } else {
@@ -135,7 +136,7 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.description),
             title: const Text('Terms of Use'),
             onTap: () async {
-              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Terms-of-use.html');
+              final Uri url = Uri.parse(AppConstants.termsOfUseUrl);
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               } else {
@@ -149,7 +150,7 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.contact_mail),
             title: const Text('Contact us'),
             onTap: () async {
-              final Uri url = Uri.parse('https://dhanuk.page.gd/GradeAstra/Contact-us.html');
+              final Uri url = Uri.parse(AppConstants.contactUsUrl);
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               } else {
@@ -162,8 +163,15 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.star),
             title: const Text('Rate App'),
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Play Store...')));
+            onTap: () async {
+              final Uri url = Uri.parse(AppConstants.playStoreUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Play Store')));
+                }
+              }
             },
           ),
         ],

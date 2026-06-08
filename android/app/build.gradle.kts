@@ -65,18 +65,18 @@ android {
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String? ?: "mykey"
-            keyPassword = keystoreProperties["keyPassword"] as String? ?: "GradeAstra@2024"
+            keyPassword = keystoreProperties["keyPassword"] as String? ?: ""
             storeFile = keystoreProperties["storeFile"]?.let { file(it) } ?: file("upload-keystore.jks")
-            storePassword = keystoreProperties["storePassword"] as String? ?: "GradeAstra@2024"
+            storePassword = keystoreProperties["storePassword"] as String? ?: ""
         }
     }
 
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
-            isShrinkResources = false
-            // proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")

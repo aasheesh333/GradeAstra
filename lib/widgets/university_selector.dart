@@ -7,11 +7,11 @@ class UniversitySelector extends StatefulWidget {
   final ValueChanged<UniversityModel> onChanged;
 
   const UniversitySelector({
-    Key? key,
+    super.key,
     required this.universities,
     required this.selectedUniversity,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<UniversitySelector> createState() => _UniversitySelectorState();

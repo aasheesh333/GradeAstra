@@ -3,11 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/theme_provider.dart';
+import 'utils/constants.dart';
 import 'screens/splash_screen.dart';
 import 'widgets/persistent_banner_ad.dart';
 
 class GradeAstraApp extends StatelessWidget {
-  const GradeAstraApp({Key? key}) : super(key: key);
+  const GradeAstraApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +20,8 @@ class GradeAstraApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xFF1565C0),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
+        primaryColor: AppConstants.primaryColor,
+        colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primaryColor),
         fontFamily: GoogleFonts.poppins().fontFamily,
         scaffoldBackgroundColor: const Color(0xFFF5F7FA),
         appBarTheme: const AppBarTheme(
@@ -32,8 +33,8 @@ class GradeAstraApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        primaryColor: const Color(0xFF1565C0),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0), brightness: Brightness.dark),
+        primaryColor: AppConstants.primaryColor,
+        colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.primaryColor, brightness: Brightness.dark),
         fontFamily: GoogleFonts.poppins().fontFamily,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF121212),

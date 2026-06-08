@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../providers/cgpa_provider.dart';
+import '../utils/constants.dart';
 import 'converter_screen.dart';
 import 'semester_screen.dart';
 import 'overall_screen.dart';
@@ -11,13 +12,15 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateTime? _lastBackPressed;
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +34,21 @@ class _HomeScreenState extends State<HomeScreen> {
     final history = context.watch<CgpaProvider>().calculationHistory;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final now = DateTime.now();
+        if (_lastBackPressed == null || now.difference(_lastBackPressed!) > const Duration(seconds: 2)) {
+          _lastBackPressed = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Press back again to exit'), duration: Duration(seconds: 2)),
+          );
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: Text(
           'GradeAstra',
@@ -39,10 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: isDark ? const Color(0xFF1E1E2E) : Colors.white,
         elevation: 0,
-        leading: const Icon(Icons.school, color: Color(0xFF1565C0)),
+        leading: const Icon(Icons.school, color: AppConstants.primaryColor),
         actions: [
           IconButton(
             icon: Icon(Icons.settings, color: isDark ? Colors.white70 : Colors.black54),
+            tooltip: 'Settings',
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
@@ -85,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildFeatureGrid(BuildContext context) {
@@ -170,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),
             )
@@ -183,10 +201,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 36, color: Colors.black87),
+              child: Icon(icon, size: 36, color: AppConstants.textPrimary),
             ),
             const Spacer(),
             Text(
@@ -236,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
             leading: const CircleAvatar(
-              backgroundColor: Color(0xFF1565C0),
+              backgroundColor: AppConstants.primaryColor,
               child: Icon(Icons.calculate, color: Colors.white, size: 20),
             ),
             title: Text(item['university_name'] ?? 'Calculation', style: GoogleFonts.poppins(fontSize: 14)),
@@ -247,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   '${item['cgpa']} CGPA',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF1565C0)),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppConstants.primaryColor),
                 ),
                 Text(
                   '${item['percentage']}%',

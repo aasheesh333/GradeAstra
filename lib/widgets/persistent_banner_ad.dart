@@ -29,7 +29,6 @@ class _PersistentBannerAdState extends State<PersistentBannerAd> {
           if (mounted) setState(() => _loaded = true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('Banner failed: ${error.message}');
           ad.dispose();
           _ad = null;
           // Retry after 3 minutes
@@ -55,7 +54,7 @@ class _PersistentBannerAdState extends State<PersistentBannerAd> {
   @override
   Widget build(BuildContext context) {
     if (!_loaded || _ad == null) {
-      return const SizedBox(height: 52);
+      return const SizedBox.shrink();
     }
     return Container(
       width: double.infinity,
