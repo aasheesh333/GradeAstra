@@ -46,7 +46,7 @@ class _ResultScreenState extends State<ResultScreen> {
       final imagePath = await File('${directory.path}/result.png').create();
       await imagePath.writeAsBytes(image);
 
-      await Share.shareXFiles([XFile(imagePath.path)], text: 'Check out my ${widget.title} from GradeAstra!');
+      await Share.shareXFiles([XFile(imagePath.path)], text: 'Check out my ${widget.title} from CGPA Calculator!');
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +116,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     Text('Formula Used:', style: GoogleFonts.inter(fontSize: 12, color: Colors.grey)),
                     Text(widget.formulaUsed, style: GoogleFonts.inter(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.grey[700]), textAlign: TextAlign.center),
                     const SizedBox(height: 16),
-                    Text('Calculated via GradeAstra', style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey[400], fontWeight: FontWeight.w600)),
+                    Text('Calculated via CGPA Calculator', style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey[400], fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),

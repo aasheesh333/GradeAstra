@@ -25,7 +25,7 @@ class HistoryScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.center,
             children: [
-              pw.Text('GradeAstra', style: pw.TextStyle(fontSize: 32, fontWeight: pw.FontWeight.bold)),
+              pw.Text('CGPA Calculator', style: pw.TextStyle(fontSize: 32, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
               pw.Text('Calculation History', style: pw.TextStyle(fontSize: 18)),
               pw.SizedBox(height: 24),
@@ -50,10 +50,10 @@ class HistoryScreen extends StatelessWidget {
     );
 
     final output = await getTemporaryDirectory();
-    final file = File('${output.path}/GradeAstra_History.pdf');
+    final file = File('${output.path}/CGPACalculator_History.pdf');
     await file.writeAsBytes(await pdf.save());
 
-    await Share.shareXFiles([XFile(file.path)], text: 'My GradeAstra Calculation History');
+    await Share.shareXFiles([XFile(file.path)], text: 'My CGPA Calculator Calculation History');
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

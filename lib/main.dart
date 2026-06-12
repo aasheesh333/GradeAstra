@@ -28,7 +28,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => CgpaProvider()),
       ],
-      child: const GradeAstraApp(),
+      child: const CGPACalculatorApp(),
     ),
   );
 }

@@ -1,4 +1,4 @@
-# GradeAstra
+# CGPA Calculator
 
 Smart CGPA (Cumulative Grade Point Average) Calculator for Indian university students.
 

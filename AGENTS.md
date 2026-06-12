@@ -1,9 +1,9 @@
-# AGENTS.md — GradeAstra
+# AGENTS.md — CGPA Calculator
 
 Instructions for AI agents working on this codebase.
 
 ## Project Overview
-GradeAstra is a Flutter mobile app (primarily Android) that converts CGPA to percentage for 12 Indian universities. It uses Provider for state management, SharedPreferences for persistence, and Google AdMob for monetization.
+CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA to percentage for 12 Indian universities. It uses Provider for state management, SharedPreferences for persistence, and Google AdMob for monetization.
 
 ## Critical Rules
 

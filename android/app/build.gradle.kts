@@ -44,8 +44,16 @@ android {
         parts[0] to (parts.getOrNull(1) ?: "")
     }
 
+    // Resolve package name (e.g. com.dhanuk.gradeastra) once and derive
+    // the Kotlin source path so MainActivity lives under <package>/<name>.
+    val resolvedPackageName = dartDefines["PACKAGE_NAME"]
+        .takeIf { !it.isNullOrBlank() && it.contains('.') }
+        ?: "com.dhanuk.gradeastra"
+    val packagePath = resolvedPackageName.replace('.', '/')
+    val mainSourceSet = "src/main/kotlin"
+
     defaultConfig {
-        applicationId = dartDefines["PACKAGE_NAME"].takeIf { !it.isNullOrEmpty() } ?: "com.dhanuk.gradeastra"
+        applicationId = resolvedPackageName
         minSdk = flutter.minSdkVersion
         targetSdk = 35
 
@@ -54,6 +62,12 @@ android {
         multiDexEnabled = true
 
         manifestPlaceholders["admob_app_id"] = dartDefines["ADMOB_APP_ID"].takeIf { !it.isNullOrEmpty() } ?: "ca-app-pub-3940256099942544~3347511713"
+    }
+
+    sourceSets {
+        getByName("main") {
+            java.srcDirs("$mainSourceSet/$packagePath")
+        }
     }
 
     val keystorePropertiesFile = rootProject.file("key.properties")

@@ -1,6 +1,6 @@
 # CGPA Calculator — Smart Grade Tracker
 
-![Build](https://github.com/YOUR_USERNAME/gradeastra/actions/workflows/build_apk.yml/badge.svg)
+![Build](https://github.com/YOUR_USERNAME/CGPACalculator/actions/workflows/build_apk.yml/badge.svg)
 
 Smart CGPA to Percentage calculator for 12+ Indian universities. Built with Flutter.
 

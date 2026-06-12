@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.dhanuk" "\0"
-            VALUE "FileDescription", "gradeastra" "\0"
+            VALUE "FileDescription", "CGPA Calculator" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gradeastra" "\0"
+            VALUE "InternalName", "CGPA Calculator" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.dhanuk. All rights reserved." "\0"
-            VALUE "OriginalFilename", "gradeastra.exe" "\0"
-            VALUE "ProductName", "gradeastra" "\0"
+            VALUE "OriginalFilename", "CGPACalculator.exe" "\0"
+            VALUE "ProductName", "CGPA Calculator" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -7,8 +7,8 @@ import 'utils/constants.dart';
 import 'screens/splash_screen.dart';
 import 'widgets/persistent_banner_ad.dart';
 
-class GradeAstraApp extends StatelessWidget {
-  const GradeAstraApp({super.key});
+class CGPACalculatorApp extends StatelessWidget {
+  const CGPACalculatorApp({super.key});
 
   @override
   Widget build(BuildContext context) {
