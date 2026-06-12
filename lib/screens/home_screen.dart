@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SnackBar(content: Text('Press back again to exit'), duration: Duration(seconds: 2)),
           );
         } else {
-          Navigator.of(context).pop();
+          SystemNavigator.pop();
         }
       },
       child: Scaffold(
