@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../providers/cgpa_provider.dart';
 import '../models/semester_model.dart';
 import 'package:flutter/services.dart';
-import '../utils/constants.dart';
 import '../utils/cgpa_calculator.dart';
 import '../services/ad_service.dart';
 import 'result_screen.dart';
@@ -152,15 +151,15 @@ class _OverallScreenState extends State<OverallScreen> {
       body: Column(
         children: [
           if (semesters.isNotEmpty)
-            Container(
+              Container(
               height: 200,
               padding: const EdgeInsets.all(16),
               child: LineChart(
                 LineChartData(
                   gridData: FlGridData(show: true, drawVerticalLine: false),
                   titlesData: FlTitlesData(
-                    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,

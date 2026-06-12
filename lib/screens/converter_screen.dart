@@ -66,21 +66,20 @@ class _ConverterScreenState extends State<ConverterScreen> {
 
     AdService().onCalculationDone(context);
 
-    if (context.mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ResultScreen(
-            title: 'Conversion Result',
-            cgpa: cgpaInput,
-            percentage: percentage,
-            classification: classification,
-            letterGrade: letterGrade,
-            formulaUsed: u.formulaDescription,
-          ),
+    if (!context.mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(
+          title: 'Conversion Result',
+          cgpa: cgpaInput,
+          percentage: percentage,
+          classification: classification,
+          letterGrade: letterGrade,
+          formulaUsed: u.formulaDescription,
         ),
-      );
-    }
+      ),
+    );
   }
 
   @override

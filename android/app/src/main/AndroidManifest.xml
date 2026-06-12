@@ -15,7 +15,7 @@
     </queries>
 
     <application
-        android:label="GradeAstra"
+        android:label="CGPA Calculator"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:hardwareAccelerated="true"

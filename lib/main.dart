@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -16,7 +17,9 @@ void main() async {
     await MobileAds.instance.initialize();
     AdService().initialize();
   } catch (e) {
-    debugPrint('AdMob initialization failed: $e');
+    if (kDebugMode) {
+      debugPrint('AdMob initialization failed: $e');
+    }
   }
 
   runApp(

@@ -29,7 +29,7 @@ class HistoryScreen extends StatelessWidget {
               pw.SizedBox(height: 8),
               pw.Text('Calculation History', style: pw.TextStyle(fontSize: 18)),
               pw.SizedBox(height: 24),
-              pw.Table.fromTextArray(
+              pw.TableHelper.fromTextArray(
                 context: context,
                 data: <List<String>>[
                   <String>['Date', 'Type', 'University', 'CGPA', 'Percentage', 'Grade'],
@@ -161,7 +161,7 @@ class HistoryScreen extends StatelessWidget {
                                 Text('${item['cgpa']} CGPA', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF1565C0))),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(color: Colors.green.withOpacity( 0.1), borderRadius: BorderRadius.circular(4)),
+                                  decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
                                   child: Text('${item['percentage']}%', style: GoogleFonts.inter(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold)),
                                 )
                               ],

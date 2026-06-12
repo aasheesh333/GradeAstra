@@ -24,9 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-      context.read<CgpaProvider>().loadHistory()
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<CgpaProvider>().loadHistory();
+    });
   }
 
   @override
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         final now = DateTime.now();
         if (_lastBackPressed == null || now.difference(_lastBackPressed!) > const Duration(seconds: 2)) {
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
       appBar: AppBar(
         title: Text(
-          'GradeAstra',
+          'CGPA Calculator',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: isDark ? Colors.white : Colors.black87),
         ),
         backgroundColor: isDark ? const Color(0xFF1E1E2E) : Colors.white,
@@ -188,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity( 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),
             )
@@ -201,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity( 0.5),
+                color: Colors.white.withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 36, color: AppConstants.textPrimary),

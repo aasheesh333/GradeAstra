@@ -15,7 +15,7 @@ class GradeAstraApp extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
 
     return MaterialApp(
-      title: 'GradeAstra',
+      title: 'CGPA Calculator',
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,
       theme: ThemeData(

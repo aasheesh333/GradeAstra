@@ -11,8 +11,8 @@ class CgpaProvider with ChangeNotifier {
   double _currentCgpa = 0.0;
   double _currentPercentage = 0.0;
 
-  List<SubjectModel> _subjectsList = [];
-  List<SemesterModel> _semestersList = [];
+  final List<SubjectModel> _subjectsList = [];
+  final List<SemesterModel> _semestersList = [];
   List<Map<String, dynamic>> _calculationHistory = [];
 
   UniversityModel get selectedUniversity => _selectedUniversity;

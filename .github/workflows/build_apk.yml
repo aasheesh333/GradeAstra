@@ -1,4 +1,4 @@
-name: Build GradeAstra
+name: Build CGPA Calculator
 
 on:
   push:
@@ -24,12 +24,15 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.24.5'
           channel: 'stable'
           cache: true
 
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Run Flutter Analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Create Keystore from Secrets
         env:
@@ -48,7 +51,7 @@ jobs:
               -validity 10000 \
               -storepass changeit \
               -keypass changeit \
-              -dname "CN=GradeAstra, OU=Development, O=GradeAstra, L=Delhi, S=Delhi, C=IN"
+              -dname "CN=CGPA Calculator, OU=Development, O=CGPA Calculator, L=Delhi, S=Delhi, C=IN"
           fi
 
       - name: Create key.properties
@@ -73,28 +76,7 @@ jobs:
         run: flutter test
         continue-on-error: true
 
-      - name: Build Split Release APKs
-        env:
-          ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
-          ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
-          ADMOB_REWARDED_ID: ${{ secrets.ADMOB_REWARDED_ID }}
-          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
-          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME }}
-          VERSION_CODE: ${{ secrets.VERSION_CODE }}
-          VERSION_NAME: ${{ secrets.VERSION_NAME }}
-        run: |
-          flutter build apk --release --split-per-abi \
-            --dart-define=ADMOB_BANNER_ID="${ADMOB_BANNER_ID:-}" \
-            --dart-define=ADMOB_INTERSTITIAL_ID="${ADMOB_INTERSTITIAL_ID:-}" \
-            --dart-define=ADMOB_REWARDED_ID="${ADMOB_REWARDED_ID:-}" \
-            --dart-define=ADMOB_APP_ID="${ADMOB_APP_ID:-}" \
-            --dart-define=PACKAGE_NAME="${PACKAGE_NAME:-}" \
-            --dart-define=VERSION_CODE="${VERSION_CODE:-}" \
-            --dart-define=VERSION_NAME="${VERSION_NAME:-}" \
-            --build-name="${VERSION_NAME:-1.0.0}" \
-            --build-number="${VERSION_CODE:-1}"
-
-      - name: Build Universal Release APK
+      - name: Build Release APK
         env:
           ADMOB_BANNER_ID: ${{ secrets.ADMOB_BANNER_ID }}
           ADMOB_INTERSTITIAL_ID: ${{ secrets.ADMOB_INTERSTITIAL_ID }}
@@ -136,23 +118,16 @@ jobs:
             --build-name="${VERSION_NAME:-1.0.0}" \
             --build-number="${VERSION_CODE:-1}"
 
-      - name: Upload APK Artifacts
+      - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
-          name: GradeAstra-Release-APKs
-          path: build/app/outputs/flutter-apk/*-release.apk
-          retention-days: 30
-
-      - name: Upload Universal APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: GradeAstra-Universal-APK
+          name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 30
 
       - name: Upload AAB (Play Store)
         uses: actions/upload-artifact@v4
         with:
-          name: GradeAstra-Release-AAB
+          name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
           retention-days: 30

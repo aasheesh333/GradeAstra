@@ -61,8 +61,11 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     Color classificationColor = Colors.green;
-    if (widget.classification == 'Fail') classificationColor = Colors.red;
-    else if (widget.classification == 'Second Class' || widget.classification == 'Pass Class') classificationColor = Colors.orange;
+    if (widget.classification == 'Fail') {
+      classificationColor = Colors.red;
+    } else if (widget.classification == 'Second Class' || widget.classification == 'Pass Class') {
+      classificationColor = Colors.orange;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +86,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [BoxShadow(color: Colors.black.withOpacity( 0.05), blurRadius: 10)],
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
                 ),
                 child: Column(
                   children: [

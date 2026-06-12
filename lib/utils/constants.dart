@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static const String appName = 'GradeAstra';
+  static const String appName = 'CGPA Calculator';
 
   // Colors
   static const Color primaryColor = Color(0xFF1565C0);

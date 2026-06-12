@@ -47,7 +47,7 @@ android {
     defaultConfig {
         applicationId = dartDefines["PACKAGE_NAME"].takeIf { !it.isNullOrEmpty() } ?: "com.dhanuk.gradeastra"
         minSdk = flutter.minSdkVersion
-        targetSdk = 34
+        targetSdk = 35
 
         versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutterVersionCodeStr.toInt()
         versionName = dartDefines["VERSION_NAME"].takeIf { !it.isNullOrEmpty() } ?: flutterVersionNameStr

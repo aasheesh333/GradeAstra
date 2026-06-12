@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'GradeAstra',
+              'CGPA Calculator',
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 32,

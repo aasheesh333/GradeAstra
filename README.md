@@ -1,4 +1,4 @@
-# GradeAstra — Smart CGPA Calculator
+# CGPA Calculator — Smart Grade Tracker
 
 ![Build](https://github.com/YOUR_USERNAME/gradeastra/actions/workflows/build_apk.yml/badge.svg)
 
@@ -26,7 +26,6 @@ Download from Actions → Artifacts tab.
 
 ## Go Live Checklist
 
-- Replace `kIsProductionAds = true` in `lib/utils/ad_constants.dart`
-- Add real AdMob IDs
+- Inject real AdMob IDs via `--dart-define` (banner, interstitial, rewarded, app id)
 - Add real signing keystore
 - Update Play Store listing

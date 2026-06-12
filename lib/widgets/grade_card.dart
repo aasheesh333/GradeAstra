@@ -8,12 +8,12 @@ class GradeCard extends StatelessWidget {
   final Color color;
 
   const GradeCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.subtitle,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,8 +9,33 @@ import '../providers/theme_provider.dart';
 import '../data/universities.dart';
 import '../utils/constants.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String _appVersion = '';
+  String _buildNumber = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppInfo();
+  }
+
+  Future<void> _loadAppInfo() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      if (!mounted) return;
+      setState(() {
+        _appVersion = info.version;
+        _buildNumber = info.buildNumber;
+      });
+    } catch (_) {}
+  }
 
   void _showDefaultUniversityDialog(BuildContext context) {
     final provider = context.read<CgpaProvider>();
@@ -90,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text('About GradeAstra'),
+            title: const Text('About CGPA Calculator'),
             onTap: () {
               showDialog(
                 context: context,
@@ -99,14 +125,19 @@ class SettingsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.school, color: AppConstants.primaryColor),
                       const SizedBox(width: 8),
-                      Text('GradeAstra', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                      Text(AppConstants.appName, style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                     ],
                   ),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Version 1.0.0', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+                      Text(
+                        _appVersion.isEmpty
+                            ? 'Version 1.0.0'
+                            : 'Version $_appVersion ($_buildNumber)',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                      ),
                       const SizedBox(height: 8),
                       Text('Smart CGPA Calculator for Indian University Students.', style: GoogleFonts.inter()),
                     ],
