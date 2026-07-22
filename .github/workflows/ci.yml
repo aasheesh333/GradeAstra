@@ -53,11 +53,23 @@ jobs:
         run: flutter test
 
       - name: Build debug APK
-        run: flutter build apk --debug
+        run: |
+          set -o pipefail
+          flutter build apk --debug 2>&1 | tee debug_build.log
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: app-debug-${{ github.run_number }}
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 14
+
+      - name: Post debug build log on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tail -n 200 debug_build.log > debug_build_tail.log
+          body="Debug APK build failed for ${{ github.sha }}. Last 100 lines:\n\n$(tail -n 100 debug_build_tail.log)"
+          gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/comments" -f "body=${body}" || true
