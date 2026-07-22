@@ -80,14 +80,14 @@ class HistoryScreen extends StatelessWidget {
             ]),
       ];
 
-      String _escapeCsvField(String field) {
+      String escapeCsvField(String field) {
         final needsQuotes = field.contains(',') || field.contains('"') || field.contains('\n') || field.contains('\r');
         if (!needsQuotes) return field;
         final escaped = field.replaceAll('"', '""');
         return '"$escaped"';
       }
 
-      final csvContent = rows.map((row) => row.map(_escapeCsvField).join(',')).join('\n');
+      final csvContent = rows.map((row) => row.map(escapeCsvField).join(',')).join('\n');
 
       final output = await getTemporaryDirectory();
       final file = File('${output.path}/CGPACalculator_History.csv');

@@ -114,9 +114,7 @@ class _ReverseConverterScreenState extends State<ReverseConverterScreen> {
             UniversitySelector(
               universities: universitiesData.where((u) => u.supportsReverseConversion).toList(),
               selectedUniversity: u.supportsReverseConversion ? u : universitiesData.firstWhere((u) => u.supportsReverseConversion),
-              onChanged: (u) {
-                if (u != null) provider.selectUniversity(u);
-              },
+              onChanged: (u) => provider.selectUniversity(u),
             ),
             const SizedBox(height: 24),
             Text('Enter your Percentage', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
