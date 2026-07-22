@@ -24,12 +24,12 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     // Load properties from dart-defines to access secrets passed at build time
@@ -54,7 +54,7 @@ android {
 
     defaultConfig {
         applicationId = resolvedPackageName
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = 36
 
         versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutterVersionCodeStr.toInt()

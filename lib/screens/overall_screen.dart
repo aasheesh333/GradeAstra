@@ -182,7 +182,7 @@ class _OverallScreenState extends State<OverallScreen> {
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: const Color(0xFF1565C0).withOpacity(0.1),
+                        color: const Color(0xFF1565C0).withValues(alpha:0.1),
                       ),
                     ),
                   ],
@@ -223,7 +223,7 @@ class _OverallScreenState extends State<OverallScreen> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha:0.05), blurRadius: 10, offset: const Offset(0, -5))],
             ),
             child: SafeArea(
               child: Row(

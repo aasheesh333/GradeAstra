@@ -3,13 +3,13 @@
 Instructions for AI agents working on this codebase.
 
 ## Project Overview
-CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA to percentage for 12 Indian universities. It uses Provider for state management, SharedPreferences for persistence, and Google AdMob for monetization.
+CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA to percentage for 12 Indian universities. It uses Provider for state management, SharedPreferences for persistence, Google AdMob for monetization, and OneSignal for push notifications.
 
 ## Critical Rules
 
 ### Secrets & Security
 - **NEVER hardcode** API keys, passwords, or secrets in source files
-- AdMob IDs are injected via `--dart-define` at build time; defaults are Google's test IDs
+- AdMob IDs and OneSignal App ID are injected via `--dart-define` at build time; defaults are test IDs
 - Keystore passwords come from GitHub Secrets → key.properties (generated in CI)
 - The AndroidManifest uses `${admob_app_id}` manifest placeholder — do NOT hardcode AdMob app IDs
 
@@ -40,7 +40,7 @@ CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA t
 ### Build & Deploy
 - Play Store requires AAB (Android App Bundle), not APK
 - ProGuard/R8 must be enabled for release builds
-- All 11 GitHub Secrets must be properly configured (see CLAUDE.md)
+- All 12 GitHub Secrets must be properly configured (see CLAUDE.md)
 - Key alias is always "mykey"
 
 ### Code Style
@@ -56,6 +56,8 @@ CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA t
 | Color scheme | `lib/utils/constants.dart` + `lib/app.dart` |
 | Ad behavior | `lib/services/ad_service.dart` |
 | Ad unit IDs | via `--dart-define` (not source code) |
+| OneSignal behavior | `lib/services/one_signal_service.dart` |
+| OneSignal App ID | via `--dart-define` (not source code) |
 | Build config | `android/app/build.gradle.kts` |
 | Permissions | `android/app/src/main/AndroidManifest.xml` |
 | CI/CD pipeline | `.github/workflows/ci.yml` (lints/tests/debug) + `.github/workflows/release.yml` (signed AAB/APK) |

@@ -3,10 +3,11 @@
 Smart CGPA (Cumulative Grade Point Average) Calculator for Indian university students.
 
 ## Tech Stack
-- **Framework:** Flutter 3.24.5 (Dart SDK >=3.0.0 <4.0.0)
+- **Framework:** Flutter 3.29.3 (Dart SDK >=3.7.0 <4.0.0)
 - **State Management:** Provider (^6.1.2)
 - **Local Storage:** SharedPreferences
 - **Ads:** Google Mobile Ads (AdMob) with banner, interstitial, and rewarded ads
+- **Push Notifications:** OneSignal Flutter SDK for cross-platform push
 - **Charts:** fl_chart (^0.68.0)
 - **Design:** Material 3 (useMaterial3: true)
 - **Fonts:** Google Fonts (Poppins, Inter)
@@ -37,7 +38,8 @@ lib/
 │   ├── history_screen.dart          # View/delete, export-PDF and export-CSV of past calculations
 │   └── settings_screen.dart         # Default university, dark mode, about, links
 ├── services/
-│   └── ad_service.dart          # Singleton AdMob service: interstitial + rewarded
+│   ├── ad_service.dart          # Singleton AdMob service: interstitial + rewarded
+│   └── one_signal_service.dart   # OneSignal initialization and permission helper
 ├── utils/
 │   ├── ad_constants.dart        # AdMob unit IDs (from dart-define env vars)
 │   ├── cgpa_calculator.dart     # Static utility: validate CGPA, rounding
@@ -69,6 +71,7 @@ flutter build appbundle --release \
   --dart-define=ADMOB_BANNER_ID=your_banner_id \
   --dart-define=ADMOB_INTERSTITIAL_ID=your_interstitial_id \
   --dart-define=ADMOB_REWARDED_ID=your_rewarded_id \
+  --dart-define=ONESIGNAL_APP_ID=your_onesignal_app_id \
   --dart-define=PACKAGE_NAME=com.dhanuk.gradeastra \
   --dart-define=VERSION_CODE=1 \
   --dart-define=VERSION_NAME=1.0.0
@@ -78,16 +81,17 @@ flutter build appbundle --release \
 - GitHub Actions workflows:
   - `.github/workflows/ci.yml` — per-push lint, test, and debug APK artifact
   - `.github/workflows/release.yml` — manual/tag-triggered signed release AAB + APK, optionally creates a GitHub Release
-- Secrets: KEYSTORE_BASE64, KEY_ALIAS, KEYSTORE_PASSWORD, KEY_PASSWORD, ADMOB_APP_ID, ADMOB_BANNER_ID, ADMOB_INTERSTITIAL_ID, ADMOB_REWARDED_ID, PACKAGE_NAME, VERSION_CODE, VERSION_NAME, GITHUB_TOKEN (auto)
+- Secrets: KEYSTORE_BASE64, KEY_ALIAS, KEYSTORE_PASSWORD, KEY_PASSWORD, ADMOB_APP_ID, ADMOB_BANNER_ID, ADMOB_INTERSTITIAL_ID, ADMOB_REWARDED_ID, ONESIGNAL_APP_ID, PACKAGE_NAME, VERSION_CODE, VERSION_NAME, GITHUB_TOKEN (auto)
 - Builds universal release APK and AAB (Android App Bundle) for Play Store
 - Signing: uses key.properties generated from secrets
 
 ## Android Configuration
 - **Package:** com.dhanuk.gradeastra
-- **compileSdk:** 36, **targetSdk:** 36, **minSdk:** Flutter default (21)
+- **compileSdk:** 36, **targetSdk:** 36, **minSdk:** 23 (required by OneSignal Flutter SDK)
 - **Signing:** Release keystore via key.properties (generated in CI from secrets)
 - **ProGuard/R8:** Enabled for release builds
 - **AdMob App ID:** Injected via Gradle manifestPlaceholders from dart-define
+- **OneSignal App ID:** Injected via `--dart-define=ONESIGNAL_APP_ID=...`
 - **Target API:** Android 16 (API level 36) for Google Play policy compliance
 
 ## Testing
