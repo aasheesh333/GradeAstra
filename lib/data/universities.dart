@@ -9,6 +9,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = (cgpa - 0.75) * 10',
     calculatePercentageLogic: (cgpa) => (cgpa - 0.75) * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => (percentage / 10) + 0.75,
   ),
   UniversityModel(
     id: 'vtu',
@@ -18,6 +19,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 9.5\n(Note: Old formula was (cgpa*10)-7.5, new 2019+ is cgpa*9.5)',
     calculatePercentageLogic: (cgpa) => cgpa * 9.5,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 9.5,
   ),
   UniversityModel(
     id: 'mumbai_uni',
@@ -27,6 +29,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 7,
     formulaDescription: 'percentage = (7.1 * cgpa) + 11',
     calculatePercentageLogic: (cgpa) => (7.1 * cgpa) + 11,
+    calculateCgpaFromPercentageLogic: (percentage) => (percentage - 11) / 7.1,
   ),
   UniversityModel(
     id: 'anna_uni',
@@ -36,6 +39,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 10',
     calculatePercentageLogic: (cgpa) => cgpa * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 10,
   ),
   UniversityModel(
     id: 'rgpv',
@@ -45,6 +49,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = (cgpa - 0.5) * 10',
     calculatePercentageLogic: (cgpa) => (cgpa - 0.5) * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => (percentage / 10) + 0.5,
   ),
   UniversityModel(
     id: 'gtu',
@@ -54,6 +59,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 10',
     calculatePercentageLogic: (cgpa) => cgpa * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 10,
   ),
   UniversityModel(
     id: 'sppu',
@@ -63,6 +69,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = (cgpa * 10) - 7.5',
     calculatePercentageLogic: (cgpa) => (cgpa * 10) - 7.5,
+    calculateCgpaFromPercentageLogic: (percentage) => (percentage + 7.5) / 10,
   ),
   UniversityModel(
     id: 'jntu',
@@ -72,6 +79,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 9.5',
     calculatePercentageLogic: (cgpa) => cgpa * 9.5,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 9.5,
   ),
   UniversityModel(
     id: 'ktu',
@@ -81,6 +89,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 10',
     calculatePercentageLogic: (cgpa) => cgpa * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 10,
   ),
   UniversityModel(
     id: 'ptu',
@@ -90,6 +99,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = (cgpa * 10) - 5',
     calculatePercentageLogic: (cgpa) => (cgpa * 10) - 5,
+    calculateCgpaFromPercentageLogic: (percentage) => (percentage + 5) / 10,
   ),
   UniversityModel(
     id: 'delhi_uni',
@@ -99,6 +109,7 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 9.5',
     calculatePercentageLogic: (cgpa) => cgpa * 9.5,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 9.5,
   ),
   UniversityModel(
     id: 'generic',
@@ -108,5 +119,6 @@ final List<UniversityModel> universitiesData = [
     gradingScale: 10,
     formulaDescription: 'percentage = cgpa * 10\nUsing standard 10-point scale formula',
     calculatePercentageLogic: (cgpa) => cgpa * 10,
+    calculateCgpaFromPercentageLogic: (percentage) => percentage / 10,
   ),
 ];

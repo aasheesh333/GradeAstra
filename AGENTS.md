@@ -58,13 +58,14 @@ CGPA Calculator is a Flutter mobile app (primarily Android) that converts CGPA t
 | Ad unit IDs | via `--dart-define` (not source code) |
 | Build config | `android/app/build.gradle.kts` |
 | Permissions | `android/app/src/main/AndroidManifest.xml` |
-| CI/CD pipeline | `.github/workflows/build_apk.yml` |
+| CI/CD pipeline | `.github/workflows/ci.yml` (lints/tests/debug) + `.github/workflows/release.yml` (signed AAB/APK) |
 
 ## Common Tasks
 
 ### Adding a new university
 1. Add entry to `universitiesData` list in `lib/data/universities.dart`
 2. Provide: id, name, shortName, state, gradingScale, formulaDescription, calculatePercentage function
+3. Optional: add `calculateCgpaFromPercentageLogic` to enable the `% → CGPA` reverse converter
 
 ### Adding a new screen
 1. Create file in `lib/screens/`

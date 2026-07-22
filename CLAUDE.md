@@ -3,7 +3,7 @@
 Smart CGPA (Cumulative Grade Point Average) Calculator for Indian university students.
 
 ## Tech Stack
-- **Framework:** Flutter 3.22.0 (Dart SDK >=3.0.0 <4.0.0)
+- **Framework:** Flutter 3.24.5 (Dart SDK >=3.0.0 <4.0.0)
 - **State Management:** Provider (^6.1.2)
 - **Local Storage:** SharedPreferences
 - **Ads:** Google Mobile Ads (AdMob) with banner, interstitial, and rewarded ads
@@ -26,14 +26,16 @@ lib/
 │   ├── cgpa_provider.dart       # Core state: university selection, calculations, history
 │   └── theme_provider.dart      # Dark/light mode toggle with persistence
 ├── screens/
-│   ├── splash_screen.dart       # 2.2s splash with branding
-│   ├── home_screen.dart         # Dashboard: 2x2 feature grid + recent calculations
-│   ├── converter_screen.dart    # CGPA-to-percentage converter with university selector
-│   ├── semester_screen.dart     # Add subjects to calculate SGPA
-│   ├── overall_screen.dart      # Multi-semester CGPA tracker with line chart
-│   ├── result_screen.dart       # Display results + share as screenshot
-│   ├── history_screen.dart      # View/delete/export-PDF of past calculations
-│   └── settings_screen.dart     # Default university, dark mode, about, links
+│   ├── splash_screen.dart           # 2.2s splash with branding
+│   ├── home_screen.dart             # Dashboard: feature grid + recent calculations
+│   ├── converter_screen.dart        # CGPA-to-percentage converter with university selector
+│   ├── reverse_converter_screen.dart  # Percentage-to-CGPA reverse converter
+│   ├── quick_convert_screen.dart    # One-tap CGPA-to-percentage using default university
+│   ├── semester_screen.dart         # Add subjects to calculate SGPA
+│   ├── overall_screen.dart          # Multi-semester CGPA tracker with line chart
+│   ├── result_screen.dart           # Display results + share as screenshot
+│   ├── history_screen.dart          # View/delete, export-PDF and export-CSV of past calculations
+│   └── settings_screen.dart         # Default university, dark mode, about, links
 ├── services/
 │   └── ad_service.dart          # Singleton AdMob service: interstitial + rewarded
 ├── utils/
@@ -73,17 +75,20 @@ flutter build appbundle --release \
 ```
 
 ## CI/CD
-- GitHub Actions workflow at `.github/workflows/build_apk.yml`
-- Secrets: KEYSTORE_BASE64, KEY_ALIAS, KEYSTORE_PASSWORD, KEY_PASSWORD, ADMOB_APP_ID, ADMOB_BANNER_ID, ADMOB_INTERSTITIAL_ID, ADMOB_REWARDED_ID, PACKAGE_NAME, VERSION_CODE, VERSION_NAME
-- Builds split-per-ABI APKs, universal APK, and AAB (Android App Bundle)
+- GitHub Actions workflows:
+  - `.github/workflows/ci.yml` — per-push lint, test, and debug APK artifact
+  - `.github/workflows/release.yml` — manual/tag-triggered signed release AAB + APK, optionally creates a GitHub Release
+- Secrets: KEYSTORE_BASE64, KEY_ALIAS, KEYSTORE_PASSWORD, KEY_PASSWORD, ADMOB_APP_ID, ADMOB_BANNER_ID, ADMOB_INTERSTITIAL_ID, ADMOB_REWARDED_ID, PACKAGE_NAME, VERSION_CODE, VERSION_NAME, GITHUB_TOKEN (auto)
+- Builds universal release APK and AAB (Android App Bundle) for Play Store
 - Signing: uses key.properties generated from secrets
 
 ## Android Configuration
 - **Package:** com.dhanuk.gradeastra
-- **compileSdk:** 36, **targetSdk:** 34, **minSdk:** Flutter default (21)
+- **compileSdk:** 36, **targetSdk:** 36, **minSdk:** Flutter default (21)
 - **Signing:** Release keystore via key.properties (generated in CI from secrets)
 - **ProGuard/R8:** Enabled for release builds
 - **AdMob App ID:** Injected via Gradle manifestPlaceholders from dart-define
+- **Target API:** Android 16 (API level 36) for Google Play policy compliance
 
 ## Testing
 ```bash

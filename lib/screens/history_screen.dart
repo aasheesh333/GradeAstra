@@ -63,6 +63,46 @@ class HistoryScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _exportCsv(BuildContext context, List<Map<String, dynamic>> history) async {
+    if (history.isEmpty) return;
+
+    try {
+      final rows = [
+        ['Date', 'Type', 'University', 'CGPA', 'Percentage', 'Grade', 'Classification'],
+        ...history.map((item) => [
+              item['date']?.toString() ?? '',
+              item['type']?.toString() ?? '',
+              item['university_name']?.toString() ?? '',
+              item['cgpa']?.toString() ?? '',
+              item['percentage']?.toString() ?? '',
+              item['grade']?.toString() ?? '',
+              item['classification']?.toString() ?? '',
+            ]),
+      ];
+
+      String _escapeCsvField(String field) {
+        final needsQuotes = field.contains(',') || field.contains('"') || field.contains('\n') || field.contains('\r');
+        if (!needsQuotes) return field;
+        final escaped = field.replaceAll('"', '""');
+        return '"$escaped"';
+      }
+
+      final csvContent = rows.map((row) => row.map(_escapeCsvField).join(',')).join('\n');
+
+      final output = await getTemporaryDirectory();
+      final file = File('${output.path}/CGPACalculator_History.csv');
+      await file.writeAsString(csvContent);
+
+      await Share.shareXFiles([XFile(file.path)], text: 'My CGPA Calculator History (CSV)');
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to export CSV. Please try again.')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CgpaProvider>();
@@ -76,6 +116,11 @@ class HistoryScreen extends StatelessWidget {
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: () => _exportPdf(context, history),
             tooltip: 'Export as PDF',
+          ),
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () => _exportCsv(context, history),
+            tooltip: 'Export as CSV',
           ),
           IconButton(
             icon: const Icon(Icons.delete_sweep),

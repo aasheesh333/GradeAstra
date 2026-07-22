@@ -7,6 +7,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../providers/cgpa_provider.dart';
 import '../utils/constants.dart';
 import 'converter_screen.dart';
+import 'quick_convert_screen.dart';
+import 'reverse_converter_screen.dart';
 import 'semester_screen.dart';
 import 'overall_screen.dart';
 import 'history_screen.dart';
@@ -116,6 +118,20 @@ class _HomeScreenState extends State<HomeScreen> {
         'icon': Icons.calculate,
         'color': const Color(0xFFE3F2FD),
         'onTap': () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ConverterScreen()))
+      },
+      {
+        'title': 'Quick Convert',
+        'subtitle': 'Default university',
+        'icon': Icons.bolt,
+        'color': const Color(0xFFE8EAF6),
+        'onTap': () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QuickConvertScreen()))
+      },
+      {
+        'title': '% → CGPA',
+        'subtitle': 'Reverse calculate',
+        'icon': Icons.swap_horiz,
+        'color': const Color(0xFFFFF8E1),
+        'onTap': () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReverseConverterScreen()))
       },
       {
         'title': 'Semester GPA',

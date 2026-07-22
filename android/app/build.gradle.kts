@@ -55,7 +55,7 @@ android {
     defaultConfig {
         applicationId = resolvedPackageName
         minSdk = flutter.minSdkVersion
-        targetSdk = 35
+        targetSdk = 36
 
         versionCode = dartDefines["VERSION_CODE"]?.toIntOrNull() ?: flutterVersionCodeStr.toInt()
         versionName = dartDefines["VERSION_NAME"].takeIf { !it.isNullOrEmpty() } ?: flutterVersionNameStr

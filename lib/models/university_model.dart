@@ -6,6 +6,7 @@ class UniversityModel {
   final int gradingScale;
   final String formulaDescription;
   final double Function(double) calculatePercentageLogic;
+  final double Function(double)? calculateCgpaFromPercentageLogic;
 
   const UniversityModel({
     required this.id,
@@ -15,12 +16,24 @@ class UniversityModel {
     required this.gradingScale,
     required this.formulaDescription,
     required this.calculatePercentageLogic,
+    this.calculateCgpaFromPercentageLogic,
   });
 
   double calculatePercentage(double cgpa) {
     double percentage = calculatePercentageLogic(cgpa);
     return percentage.clamp(0.0, 100.0);
   }
+
+  double calculateCgpaFromPercentage(double percentage) {
+    final logic = calculateCgpaFromPercentageLogic;
+    if (logic != null) {
+      double cgpa = logic(percentage);
+      return cgpa.clamp(0.0, gradingScale.toDouble());
+    }
+    return 0.0;
+  }
+
+  bool get supportsReverseConversion => calculateCgpaFromPercentageLogic != null;
 
   String getClassification(double percentage) {
     if (percentage >= 75) return "Distinction";
