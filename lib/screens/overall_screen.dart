@@ -104,7 +104,7 @@ class _OverallScreenState extends State<OverallScreen> {
     );
   }
 
-  void _viewFinalResult() {
+  Future<void> _viewFinalResult() async {
     final provider = context.read<CgpaProvider>();
     if (provider.semestersList.isEmpty) return;
 
@@ -124,8 +124,9 @@ class _OverallScreenState extends State<OverallScreen> {
       'classification': classification,
       'date': DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
     };
-    provider.saveToHistory(historyEntry);
+    await provider.saveToHistory(historyEntry);
 
+    if (!context.mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -208,6 +209,7 @@ class _OverallScreenState extends State<OverallScreen> {
                             Text(sem.sgpa.toStringAsFixed(2), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
+                              tooltip: 'Delete Semester',
                               onPressed: () {
                                 provider.removeSemester(sem.id);
                                 AdService().onCalculationDone(context);

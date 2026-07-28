@@ -175,9 +175,9 @@ class _SemesterScreenState extends State<SemesterScreen> {
     };
     await provider.saveToHistory(historyEntry);
 
+    if (!context.mounted) return;
     AdService().onCalculationDone(context);
 
-    if (!context.mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -226,7 +226,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+              color: Theme.of(context).colorScheme.surface,
               boxShadow: [BoxShadow(color: Colors.black.withValues(alpha:0.05), blurRadius: 10, offset: const Offset(0, -5))],
             ),
             child: SafeArea(

@@ -62,9 +62,9 @@ class _QuickConvertScreenState extends State<QuickConvertScreen> {
     };
     await provider.saveToHistory(historyEntry);
 
+    if (!context.mounted) return;
     AdService().onCalculationDone(context);
 
-    if (!context.mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(

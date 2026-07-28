@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../providers/cgpa_provider.dart';
+import '../services/one_signal_service.dart';
 import '../utils/constants.dart';
 import 'converter_screen.dart';
 import 'quick_convert_screen.dart';
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<CgpaProvider>().loadHistory();
+      OneSignalService().requestPermission();
     });
   }
 

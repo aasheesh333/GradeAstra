@@ -38,7 +38,7 @@ class CGPACalculatorApp extends StatelessWidget {
         fontFamily: GoogleFonts.poppins().fontFamily,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF121212),
-        cardColor: const Color(0xFF1E1E2E), // dark theme card color, we ensured hardcoded text color in HomeScreen
+        cardTheme: const CardTheme(color: Color(0xFF1E1E2E)),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
         ),
