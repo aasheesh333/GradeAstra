@@ -23,6 +23,8 @@ void main() async {
   // Initialize OneSignal for push notifications
   try {
     await OneSignalService().initialize();
+    await Future.delayed(const Duration(seconds: 3));
+    await OneSignalService().requestPermission();
   } catch (e) {
     // Ignore OneSignal initialization errors in release builds.
   }
